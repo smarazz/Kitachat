@@ -1,0 +1,66 @@
+<div class="chat-wrapper">
+  <div class="messages-container">
+    @for (msg of messages; track msg.timestamp) {
+      <div class="message-row" [ngClass]="msg.sender">
+        <div class="avatar">
+          @if (msg.sender === 'user') {
+            <lucide-angular [img]="UserIcon" class="icon"></lucide-angular>
+          } @else {
+            <lucide-angular [img]="BotIcon" class="icon ai-icon"></lucide-angular>
+          }
+        </div>
+        <div class="message-content">
+          <mat-card class="message-card">
+            <mat-card-content>
+              <p class="text">{{ msg.text }}</p>
+
+              @if (msg.sources && msg.sources.length > 0) {
+                <div class="sources-section">
+                  <div class="source-header">
+                    <lucide-angular [img]="FileTextIcon" size="14"></lucide-angular>
+                    <span>Fonti:</span>
+                  </div>
+                  <ul class="sources-list">
+                    @for (source of msg.sources; track source.documentName) {
+                      <li>
+                        <span class="doc-name">{{ source.documentName }}</span>
+                        <span class="doc-section">{{ source.section }}</span>
+                      </li>
+                    }
+                  </ul>
+                </div>
+              }
+            </mat-card-content>
+            <mat-card-footer>
+              <span class="timestamp">{{ msg.timestamp | date:'HH:mm' }}</span>
+            </mat-card-footer>
+          </mat-card>
+        </div>
+      </div>
+    }
+
+    @if (isLoading) {
+      <div class="message-row ai">
+        <div class="avatar">
+          <lucide-angular [img]="BotIcon" class="icon ai-icon"></lucide-angular>
+        </div>
+        <div class="typing-indicator">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="input-container">
+    <mat-form-field appearance="outline" class="chat-input">
+      <input matInput
+             placeholder="Scrivi la tua domanda..."
+             [(ngModel)]="userInput"
+             (keyup.enter)="sendMessage()"
+             [disabled]="isLoading">
+      <button mat-icon-button matSuffix (click)="sendMessage()" [disabled]="!userInput.trim() || isLoading">
+        <lucide-angular [img]="SendIcon" size="20"></lucide-angular>
+      </button>
+    </mat-form-field>
+  </div>
+</div>

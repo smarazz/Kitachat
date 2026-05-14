@@ -1,0 +1,23 @@
+@use '@angular/material' as mat;
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #f8fafc;
+}
+
+// Add Material core styles
+@include mat.core();
+
+// Simple theme configuration
+$my-primary: mat.m2-define-palette(mat.$m2-blue-palette, 600);
+$my-accent: mat.m2-define-palette(mat.$m2-green-palette, A200, A100, A400);
+$my-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $my-primary,
+    accent: $my-accent,
+  )
+));
+
+@include mat.all-component-themes($my-theme);

@@ -1,0 +1,26 @@
+<mat-toolbar color="primary" class="header">
+  <div class="header-container">
+    <div class="logo">
+      <span class="logo-text">PharmSupport AI</span>
+    </div>
+
+    <nav class="nav-links">
+      <a mat-button routerLink="/chat" routerLinkActive="active-link">
+        <lucide-angular [img]="MessageIcon" size="18" class="nav-icon"></lucide-angular>
+        Chat Supporto
+      </a>
+      <a mat-button routerLink="/admin" routerLinkActive="active-link">
+        <lucide-angular [img]="DatabaseIcon" size="18" class="nav-icon"></lucide-angular>
+        Knowledge Base
+      </a>
+    </nav>
+
+    <div class="user-profile">
+      <span class="operator-badge">Operatore Interno</span>
+    </div>
+  </div>
+</mat-toolbar>
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
