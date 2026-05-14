@@ -308,3 +308,61 @@ main.js             | main  | 51.21 kB |
 Application bundle generation complete. [0.496 seconds] - 2026-05-14T13:54:50.779Z
 
 Page reload sent to client(s).
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 51.42 kB |
+
+Application bundle generation complete. [4.659 seconds] - 2026-05-14T15:16:02.722Z
+
+Page reload sent to client(s).
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 58.63 kB |
+
+Application bundle generation complete. [3.157 seconds] - 2026-05-14T15:17:34.449Z
+
+Page reload sent to client(s).
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 60.34 kB |
+
+Application bundle generation complete. [0.778 seconds] - 2026-05-14T15:17:39.635Z
+
+Component update sent to client(s).
+3:19:10 PM [vite] (client) ✨ new dependencies optimized: @angular/material/dialog, @angular/material/snack-bar
+3:19:10 PM [vite] (client) ✨ optimized dependencies changed. reloading
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 60.67 kB |
+
+Application bundle generation complete. [0.556 seconds] - 2026-05-14T15:21:31.723Z
+
+Page reload sent to client(s).
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 60.82 kB |
+
+Application bundle generation complete. [1.448 seconds] - 2026-05-14T15:22:19.403Z
+
+Page reload sent to client(s).
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 62.27 kB |
+
+Application bundle generation complete. [0.874 seconds] - 2026-05-14T15:26:23.114Z
+
+Page reload sent to client(s).
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 62.16 kB |
+
+Application bundle generation complete. [0.399 seconds] - 2026-05-14T15:27:33.282Z
+
+Page reload sent to client(s).

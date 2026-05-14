@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 
 export interface Source {
   documentName: string;
@@ -23,15 +23,17 @@ export interface DocumentInfo {
   providedIn: 'root'
 })
 export class KnowledgeService {
-  private documents: DocumentInfo[] = [
+  private initialDocuments: DocumentInfo[] = [
     { name: 'Manuale_Utente_GestiPharm.pdf', uploadDate: new Date(2023, 10, 5), status: 'indexed' },
     { name: 'FAQ_Tecniche_2024.docx', uploadDate: new Date(2024, 0, 15), status: 'indexed' }
   ];
 
+  private documentsSubject = new BehaviorSubject<DocumentInfo[]>(this.initialDocuments);
+
   constructor() {}
 
   getDocuments(): Observable<DocumentInfo[]> {
-    return of(this.documents);
+    return this.documentsSubject.asObservable();
   }
 
   uploadFile(file: File): Observable<DocumentInfo> {
@@ -40,8 +42,21 @@ export class KnowledgeService {
       uploadDate: new Date(),
       status: 'indexed'
     };
-    this.documents.push(newDoc);
+    const currentDocs = this.documentsSubject.value;
+    this.documentsSubject.next([...currentDocs, newDoc]);
     return of(newDoc);
+  }
+
+  deleteDocument(name: string): Observable<boolean> {
+    const currentDocs = this.documentsSubject.value;
+    const index = currentDocs.findIndex(d => d.name === name);
+    if (index !== -1) {
+      const updatedDocs = [...currentDocs];
+      updatedDocs.splice(index, 1);
+      this.documentsSubject.next(updatedDocs);
+      return of(true);
+    }
+    return of(false);
   }
 
   sendMessage(query: string): Observable<Message> {
