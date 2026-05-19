@@ -54,6 +54,14 @@ ng e2e
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
+## Project Architecture
+
+This is currently a **standalone frontend application**. There is no separate backend server or database in this repository.
+
+Backend functionality (such as authentication and data management) is currently simulated using mock services located in `src/app/services/`:
+- `AuthService` (`src/app/services/auth.ts`): Simulates authentication and operator status.
+- `KnowledgeService` (`src/app/services/knowledge.ts`): Simulates a knowledge base and chat responses using hardcoded data and RxJS.
+
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
