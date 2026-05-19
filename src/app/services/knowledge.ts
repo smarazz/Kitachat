@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Source {
   documentName: string;
@@ -23,64 +25,58 @@ export interface DocumentInfo {
   providedIn: 'root'
 })
 export class KnowledgeService {
-  private initialDocuments: DocumentInfo[] = [
-    { name: 'Manuale_Utente_GestiPharm.pdf', uploadDate: new Date(2023, 10, 5), status: 'indexed' },
-    { name: 'FAQ_Tecniche_2024.docx', uploadDate: new Date(2024, 0, 15), status: 'indexed' }
-  ];
+  private http = inject(HttpClient);
+  private apiUrl = environment.apiUrl;
 
-  private documentsSubject = new BehaviorSubject<DocumentInfo[]>(this.initialDocuments);
+  private documentsSubject = new BehaviorSubject<DocumentInfo[]>([]);
 
-  constructor() {}
+  constructor() {
+    this.refreshDocuments();
+  }
+
+  private refreshDocuments(): void {
+    this.http.get<DocumentInfo[]>(`${this.apiUrl}/documents`).subscribe(docs => {
+      this.documentsSubject.next(docs);
+    });
+  }
 
   getDocuments(): Observable<DocumentInfo[]> {
     return this.documentsSubject.asObservable();
   }
 
   uploadFile(file: File): Observable<DocumentInfo> {
-    const newDoc: DocumentInfo = {
-      name: file.name,
-      uploadDate: new Date(),
-      status: 'indexed'
-    };
-    const currentDocs = this.documentsSubject.value;
-    this.documentsSubject.next([...currentDocs, newDoc]);
-    return of(newDoc);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return new Observable<DocumentInfo>(observer => {
+      this.http.post<DocumentInfo>(`${this.apiUrl}/documents`, formData).subscribe({
+        next: (newDoc) => {
+          this.refreshDocuments();
+          observer.next(newDoc);
+          observer.complete();
+        },
+        error: (err) => observer.error(err)
+      });
+    });
   }
 
   deleteDocument(name: string): Observable<boolean> {
-    const currentDocs = this.documentsSubject.value;
-    const index = currentDocs.findIndex(d => d.name === name);
-    if (index !== -1) {
-      const updatedDocs = [...currentDocs];
-      updatedDocs.splice(index, 1);
-      this.documentsSubject.next(updatedDocs);
-      return of(true);
-    }
-    return of(false);
+    return new Observable<boolean>(observer => {
+      this.http.delete(`${this.apiUrl}/documents/${name}`).subscribe({
+        next: () => {
+          this.refreshDocuments();
+          observer.next(true);
+          observer.complete();
+        },
+        error: () => {
+          observer.next(false);
+          observer.complete();
+        }
+      });
+    });
   }
 
   sendMessage(query: string): Observable<Message> {
-    const aiResponse: Message = {
-      sender: 'ai',
-      timestamp: new Date(),
-      text: this.getMockResponse(query),
-      sources: [
-        { documentName: 'Manuale_Utente_GestiPharm.pdf', section: 'Capitolo 4: Gestione Magazzino' },
-        { documentName: 'FAQ_Tecniche_2024.docx', section: 'Errori comuni invio ricette' }
-      ]
-    };
-
-    return of(aiResponse);
-  }
-
-  private getMockResponse(query: string): string {
-    const q = query.toLowerCase();
-    if (q.includes('ricetta') || q.includes('invio')) {
-      return "Per l'invio delle ricette elettroniche, assicurati che il lettore smart card sia collegato correttamente. Se riscontri l'errore E04, verifica la configurazione dei certificati nel menu Impostazioni > Servizi TS.";
-    }
-    if (q.includes('magazzino') || q.includes('scorte')) {
-      return "Il modulo magazzino consente di automatizzare il riordino basandosi sulle vendite medie degli ultimi 30 giorni. Puoi configurare le soglie critiche nella sezione Articoli.";
-    }
-    return "Grazie per la domanda. In base alla documentazione tecnica, questa operazione richiede l'accesso con privilegi di amministratore e la verifica del database locale.";
+    return this.http.post<Message>(`${this.apiUrl}/chat`, { query });
   }
 }
