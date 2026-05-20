@@ -10,11 +10,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Support App Backend API');
-});
-
-// In-memory document storage for this mock-to-real transition
+// In-memory document storage
 let documents = [
   { name: 'Manuale_Utente_GestiPharm.pdf', uploadDate: new Date(2023, 10, 5), status: 'indexed' },
   { name: 'FAQ_Tecniche_2024.docx', uploadDate: new Date(2024, 0, 15), status: 'indexed' }
@@ -36,6 +32,10 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage: storage });
+
+app.get('/', (req, res) => {
+  res.send('Support App Backend API');
+});
 
 // Document Endpoints
 app.get('/api/documents', (req, res) => {
